@@ -1,7 +1,8 @@
 'use strict';
 
 var parent = document.getElementById('images');
-
+var count = 0;
+var rounds = 25;
 var allImages = [];
 
 function CreateImage(url, alt, title) {
@@ -34,13 +35,21 @@ function randomNumber(min = 0, max) {
 }
 
 function getRandomImage() {
-
   parent.textContent = '';
+  count++;
+
+  if (count === rounds) {
+    parent.removeEventListener('click', getRandomImage);
+    return;
+  }
+
 
   var randomIndex = randomNumber(0, allImages.length - 1);
   var secondRandomIndex = randomNumber(0, allImages.length - 1);
   var thirdRandomIndex = randomNumber(0, allImages.length - 1);
   // while loop prevents images from repeating
+
+
   while (randomIndex === secondRandomIndex || secondRandomIndex === thirdRandomIndex || thirdRandomIndex === randomIndex) {
     secondRandomIndex = randomNumber(0, allImages.length - 1);
     thirdRandomIndex = randomNumber(0, allImages.length - 1);
@@ -53,6 +62,7 @@ function getRandomImage() {
   allImages[thirdRandomIndex].views++;
 }
 
+// event listener adding a vote to image clicked
 parent.addEventListener('click', function () {
   var titleOfImageClicked = event.target.title;
 
@@ -62,8 +72,6 @@ parent.addEventListener('click', function () {
     }
   }
 });
-
-
 
 
 
