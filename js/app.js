@@ -13,6 +13,60 @@ function CreateImage(url, alt, title) {
   allImages.push(this);
 }
 
+CreateImage.prototype.appendImage = function () {
+  // create img element
+  var imageElement = document.createElement('img');
+
+  // fill the src with the path to the image
+  imageElement.setAttribute('src', this.filePath);
+  // fill in alt 
+  imageElement.setAttribute('alt', this.alt);
+  // fill in title
+  imageElement.setAttribute('title', this.title);
+  // appendChild to parent element
+  parent.appendChild(imageElement);
+};
+
+
+
+function randomNumber(min = 0, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getRandomImage() {
+
+  parent.textContent = '';
+
+  var randomIndex = randomNumber(0, allImages.length - 1);
+  var secondRandomIndex = randomNumber(0, allImages.length - 1);
+  var thirdRandomIndex = randomNumber(0, allImages.length - 1);
+  // while loop prevents images from repeating
+  while (randomIndex === secondRandomIndex || secondRandomIndex === thirdRandomIndex || thirdRandomIndex === randomIndex) {
+    secondRandomIndex = randomNumber(0, allImages.length - 1);
+    thirdRandomIndex = randomNumber(0, allImages.length - 1);
+  }
+  allImages[randomIndex].appendImage();
+  allImages[randomIndex].views++;
+  allImages[secondRandomIndex].appendImage();
+  allImages[secondRandomIndex].views++;
+  allImages[thirdRandomIndex].appendImage();
+  allImages[thirdRandomIndex].views++;
+}
+
+parent.addEventListener('click', function () {
+  var titleOfImageClicked = event.target.title;
+
+  for (var i = 0; i < allImages.length; i++) {
+    if (titleOfImageClicked === allImages[i].title) {
+      allImages[i].votes++;
+    }
+  }
+});
+
+
+
+
+
 
 new CreateImage('../images/bag.jpg', 'bag', 'bag');
 new CreateImage('../images/banana.jpg', 'banana', 'banana');
@@ -35,6 +89,6 @@ new CreateImage('../images/usb.gif', 'usb', 'usb');
 new CreateImage('../images/water-can.jpg', 'water-can', 'water-can');
 new CreateImage('../images/wine-glass.jpg', 'wine-glass', 'wine-glass');
 
-function randomNumber(min = 0, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+
+
+getRandomImage();
