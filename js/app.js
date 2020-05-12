@@ -46,6 +46,8 @@ function randomNumber(min = 0, max) {
 
 function getRandomImage() {
 
+  parent.textContent = '';
+  //appends list
   if (count === rounds) {
     parent.removeEventListener('click', getRandomImage);
     CreateImage.prototype.appendList();
@@ -53,7 +55,7 @@ function getRandomImage() {
   }
 
   count++;
-  parent.textContent = '';
+
 
   var randomIndex = randomNumber(0, allImages.length - 1);
   var secondRandomIndex = randomNumber(0, allImages.length - 1);
