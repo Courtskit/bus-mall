@@ -8,6 +8,7 @@ var names = [];
 var votes = [];
 var views = [];
 var totalVotes = 0;
+var allVotes = 0;
 
 
 //constructor function 
@@ -114,8 +115,15 @@ CreateImage.prototype.appendList = function () {
     var listElement = document.createElement('li');
     listElement.textContent = `${allImages[i].title} had ${allImages[i].votes} votes and was shown ${allImages[i].views} times.`;
     listParent.appendChild(listElement);
+
+    var votesStored = localStorage.getItem('votes');
+    allVotes = JSON.parse(votesStored);
+    allVotes += allImages[i].votes;
+    var stringifiedVotesTotals = JSON.stringify(allVotes);
+    localStorage.setItem('votes', stringifiedVotesTotals);
   }
 };
+
 
 // makes names and votes array to display on chart
 function makeNamesArray() {
@@ -242,3 +250,15 @@ function generateChart() {
     }
   });
 }
+
+
+
+
+// var stringifiedImages = JSON.stringify(allImages);
+// // console.log(allImages);
+// localStorage.setItem('allImagesString', stringifiedImages);
+// // console.log(stringifiedImages);
+// var imagesFromStorage = localStorage.getItem('allImagesString');
+// // console.log(imagesFromStorage);
+// var imagesTurnedBackJS = JSON.parse(imagesFromStorage);
+// // console.log(imagesTurnedBackJS);
