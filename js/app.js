@@ -1,11 +1,15 @@
 'use strict';
 
-var parent = document.getElementById('images');
+var parentElement = document.getElementById('images');
 var listParent = document.getElementById('lists');
-var count = 0;
-var rounds = 25;
 var allImages = [];
+var uniqueIndexArray = [];
+var names = [];
+var votes = [];
+var totalVotes = 0;
 
+
+//constructor function 
 function CreateImage(url, alt, title) {
   this.filePath = url;
   this.alt = alt;
@@ -15,82 +19,16 @@ function CreateImage(url, alt, title) {
   allImages.push(this);
 }
 
-CreateImage.prototype.appendImage = function () {
-  // create img element
+
+
+//appends image to ID in HTML
+CreateImage.prototype.render = function () {
   var imageElement = document.createElement('img');
-
-  // fill the src with the path to the image
-  imageElement.setAttribute('src', this.filePath);
-  // fill in alt 
-  imageElement.setAttribute('alt', this.alt);
-  // fill in title
-  imageElement.setAttribute('title', this.title);
-  // appendChild to parent element
-  parent.appendChild(imageElement);
+  imageElement.src = this.filePath;
+  imageElement.alt = this.alt;
+  imageElement.title = this.title;
+  parentElement.appendChild(imageElement);
 };
-
-CreateImage.prototype.appendList = function () {
-  for (var i = 0; i < allImages.length; i++) {
-    var listElement = document.createElement('li');
-
-    listElement.textContent = `${allImages[i].title} had ${allImages[i].votes} votes and was shown ${allImages[i].views} times.`;
-
-    listParent.appendChild(listElement);
-  }
-};
-
-
-function randomNumber(min = 0, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function getRandomImage() {
-
-  parent.textContent = '';
-  //appends list
-  if (count === rounds) {
-    parent.removeEventListener('click', getRandomImage);
-    CreateImage.prototype.appendList();
-    return;
-  }
-
-  count++;
-
-
-  var randomIndex = randomNumber(0, allImages.length - 1);
-  var secondRandomIndex = randomNumber(0, allImages.length - 1);
-  var thirdRandomIndex = randomNumber(0, allImages.length - 1);
-  // while loop prevents images from repeating
-
-
-  while (randomIndex === secondRandomIndex || secondRandomIndex === thirdRandomIndex || thirdRandomIndex === randomIndex) {
-    secondRandomIndex = randomNumber(0, allImages.length - 1);
-    thirdRandomIndex = randomNumber(0, allImages.length - 1);
-  }
-  allImages[randomIndex].appendImage();
-  allImages[randomIndex].views++;
-  allImages[secondRandomIndex].appendImage();
-  allImages[secondRandomIndex].views++;
-  allImages[thirdRandomIndex].appendImage();
-  allImages[thirdRandomIndex].views++;
-}
-
-// event listener adding a vote to image clicked
-parent.addEventListener('click', function () {
-  var titleOfImageClicked = event.target.title;
-
-  for (var i = 0; i < allImages.length; i++) {
-    if (titleOfImageClicked === allImages[i].title) {
-      allImages[i].votes++;
-    }
-  }
-});
-
-
-
-
-
-
 
 new CreateImage('../images/bag.jpg', 'bag', 'bag');
 new CreateImage('../images/banana.jpg', 'banana', 'banana');
@@ -114,5 +52,144 @@ new CreateImage('../images/water-can.jpg', 'water-can', 'water-can');
 new CreateImage('../images/wine-glass.jpg', 'wine-glass', 'wine-glass');
 
 
+function getRandomIndex() {
+  var index = randomNumber(allImages.length);
 
-getRandomImage();
+  while (uniqueIndexArray.includes(index)) {
+    index = randomNumber(allImages.length);
+  }
+
+  uniqueIndexArray.push(index);
+
+  if (uniqueIndexArray.length > 6) {
+    uniqueIndexArray.shift();
+  }
+  return index;
+
+}
+
+// generates random number
+function randomNumber(max) {
+  return Math.floor(Math.random() * max);
+}
+
+function displayImage() {
+  var index = getRandomIndex();
+  allImages[index].render();
+  allImages[index].views++;
+}
+
+// event listener adding a vote to image clicked
+function clickFunction(event) {
+  parentElement.textContent = '';
+
+  var titleOfImageClicked = event.target.title;
+
+  for (var i = 0; i < allImages.length; i++) {
+    if (titleOfImageClicked === allImages[i].title) {
+      allImages[i].votes++;
+      totalVotes++;
+
+      if (totalVotes === 25) {
+        parentElement.removeEventListener('click', clickFunction);
+        makeNamesArray();
+        CreateImage.prototype.appendList();
+      }
+    }
+  }
+  displayImage();
+  displayImage();
+  displayImage();
+};
+
+
+displayImage();
+displayImage();
+displayImage();
+
+parentElement.addEventListener('click', clickFunction);
+
+CreateImage.prototype.appendList = function () {
+  for (var i = 0; i < allImages.length; i++) {
+    var listElement = document.createElement('li');
+    listElement.textContent = `${allImages[i].title} had ${allImages[i].votes} votes and was shown ${allImages[i].views} times.`;
+    listParent.appendChild(listElement);
+  }
+};
+
+// makes names and votes array to display on chart
+function makeNamesArray() {
+  for (var i = 0; i < allImages.length; i++) {
+    names.push(allImages[i].title);
+    votes.push(allImages[i].votes);
+  }
+  generateChart();
+}
+
+function generateChart() {
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: names,
+      datasets: [{
+        label: '# of Votes',
+        data: votes,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
