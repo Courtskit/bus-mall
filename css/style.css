@@ -1,17 +1,37 @@
+body{
+  background-color: rgba(190, 196, 196, 0.548);
+}
+header, footer {
+  height: 100px;
+  background-color: rgb(248, 64, 31);
+}
+
+#images {
+  width: 60%;
+  margin: 20px auto;
+  display: flex;
+  justify-content: space-between;
+}
+
 img {
   height: 200px;
   width: 250px;
 }
-body{
-  background-color: rgb(190, 196, 196);
+
+#lists{
+  width: 50%;
+  text-align: center;
+  margin: 20px auto;
 }
 
 ul {
-  color: rgb(48, 73, 48);
+  color: rgb(24, 140, 155);
+  font-weight: bold;
+  font-size: 25px;
 }
 
-
 canvas {
-  width: 400px;
-  height: 400px;
+  max-width: 1000px;
+  max-height: 1000px;
+  margin: auto;
 }
