@@ -9,3 +9,9 @@ body{
 ul {
   color: rgb(48, 73, 48);
 }
+
+
+canvas {
+  width: 400px;
+  height: 400px;
+}
