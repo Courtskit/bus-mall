@@ -8,8 +8,8 @@ var names = [];
 var votes = [];
 var views = [];
 var totalVotes = 0;
-var allVotes = 0;
-
+var imagesFromLocalJString = [];
+// var allVotes = 0;
 
 //constructor function 
 function CreateImage(url, alt, title) {
@@ -101,12 +101,15 @@ function clickFunction(event) {
   displayImage();
   displayImage();
   displayImage();
-};
+}
 
 
+
 displayImage();
 displayImage();
 displayImage();
+
+// localStorageForImageData();
 
 parentElement.addEventListener('click', clickFunction);
 
@@ -115,15 +118,27 @@ CreateImage.prototype.appendList = function () {
     var listElement = document.createElement('li');
     listElement.textContent = `${allImages[i].title} had ${allImages[i].votes} votes and was shown ${allImages[i].views} times.`;
     listParent.appendChild(listElement);
-
-    var votesStored = localStorage.getItem('votes');
-    allVotes = JSON.parse(votesStored);
-    allVotes += allImages[i].votes;
-    var stringifiedVotesTotals = JSON.stringify(allVotes);
-    localStorage.setItem('votes', stringifiedVotesTotals);
+  }
+  if (localStorage.getItem('imageLocal') === null) {
+    console.log(allImages);
+    var stringImages = JSON.stringify(allImages);
+    localStorage.setItem('imageLocal', stringImages);
+  } else {
+    var imagesFromLocal = localStorage.getItem('imageLocal');
+    var stringArrayLocall = JSON.parse(imagesFromLocal);
+    imagesFromLocalJString = stringArrayLocall;
+    addViewsAndVotesLocal();
   }
 };
 
+function addViewsAndVotesLocal() {
+  for (var i = 0; i < allImages.length; i++) {
+    imagesFromLocalJString[i].views += allImages[i].views;
+    imagesFromLocalJString[i].votes += allImages[i].votes;
+  }
+  var updatedCount = JSON.stringify(imagesFromLocalJString);
+  localStorage.setItem('imageLocal', updatedCount);
+}
 
 // makes names and votes array to display on chart
 function makeNamesArray() {
@@ -250,15 +265,3 @@ function generateChart() {
     }
   });
 }
-
-
-
-
-// var stringifiedImages = JSON.stringify(allImages);
-// // console.log(allImages);
-// localStorage.setItem('allImagesString', stringifiedImages);
-// // console.log(stringifiedImages);
-// var imagesFromStorage = localStorage.getItem('allImagesString');
-// // console.log(imagesFromStorage);
-// var imagesTurnedBackJS = JSON.parse(imagesFromStorage);
-// // console.log(imagesTurnedBackJS);
