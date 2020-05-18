@@ -9,11 +9,11 @@ var votes = [];
 var views = [];
 var totalVotes = 0;
 var imagesFromLocalJString = [];
-// var allVotes = 0;
 
 //constructor function 
 function CreateImage(url, alt, title) {
-  this.filePath = url;
+  // this.filePath = url;
+  this.filePath = '/images/bag.jpg';
   this.alt = alt;
   this.title = title;
   this.votes = 0;
