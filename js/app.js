@@ -12,8 +12,7 @@ var imagesFromLocalJString = [];
 
 //constructor function 
 function CreateImage(url, alt, title) {
-  // this.filePath = url;
-  this.filePath = '/images/bag.jpg';
+  this.filePath = url;
   this.alt = alt;
   this.title = title;
   this.votes = 0;
